@@ -13,12 +13,6 @@ and abnormal lines.
 ### 1. Import Libraries
 
 import os
-from skimage import data, io, filters
-from skimage.color import rgb2hsv
-from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops, regionprops_table
-from skimage.morphology import closing, square
-from skimage.color import label2rgb
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
@@ -47,6 +41,12 @@ currentDF = currentDF.iloc[0:20,0:4]
 ### 4. Formatting
 
 ###### 4.1 - Remove data bars
+
+len(currentDF)
+currentDF.loc('Passage')
+
+
+
 
 cellLine = currentDF['Cell Line']
 

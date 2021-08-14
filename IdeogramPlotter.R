@@ -122,12 +122,14 @@ unexpanded3 <- unexpandedRaw[c(1,60:117),]     # Subset chr1, chr17 = chrY
 
 expanded1 <- expandedRaw[1:50,]                # Subset chr1 - chr9
 expanded2 <- expandedRaw[c(1,50:105),]         # Subset chr1, chr9 - chr16
+expanded214 <- expandedRaw[c(1,50:83, 87:105),]# Subset chr1, chr9 - chr16, but hide some of 13 so 14 is visible
 expanded3 <- expandedRaw[c(1,106:158),]        # Subset chr1, chr17 - chrY
+expanded3y <- expandedRaw[c(1,106:136,154:158 ),]# Subset chr1, chr17 - chrY, but hide some of chrX so Y is visible
 
 
 ###### 3.1 - Check if each cytogenetic position's coordinate can be found #####################
-cytogeneticTableCheck(unexpanded1)
-cytogeneticTableCheck(expanded1)
+cytogeneticTableCheck(unexpanded3)
+cytogeneticTableCheck(expanded3)
 
 hg19[which(seqnames(hg19) == 'chr11')][1:10]
 
@@ -135,7 +137,7 @@ hg19[which(seqnames(hg19) == 'chr11')][1:10]
 
 (dataToPlot <- cytoToCoord(unexpanded3, verbose = FALSE))
 
-(dataToPlot <- cytoToCoord(expanded1, verbose = FALSE))
+(dataToPlot <- cytoToCoord(expanded214, verbose = FALSE))
 
 ###### 3.3 - Generate GRange object to plot ###################################################
 
@@ -151,15 +153,15 @@ grToPlot <- GRanges(
 ###### 4.1 - Alternatively, I could just reformat manually ###
 colorList <- c("#006837" , "#1A9850" , "#A50026" , "#D73027" , "#4575B4" , "#313695" , "#b8b8b8" )  # Final choice
 
-width = 0.05                  # For expanded
+width = 0.1                  # For expanded
 #width = 0.1                  # For expanded
 #width = 0.01421333            # For unexpanded
-width = 533/1875 * 0.05            # For unexpanded
+width = 533/1875 * 0.1            # For unexpanded
 verbose = FALSE
 ### Optimizing for output:
 ### Display bars in data.panel 2
 pp <- getDefaultPlotParams(plot.type=2)
-pp$ideogramheight = 20
+pp$ideogramheight = 25
 pp$data1inmargin = 0
 pp$data2inmargin = 10
 pp$data1height = 0
@@ -189,7 +191,7 @@ setwd('C:/Users/grossar/Box/Sareen Lab Shared/Data/Andrew/E427 - Ideogram update
 kpOutput <- recordPlot(load=NULL, attach=NULL)
 
 ### Save plot
-png(filename= 'expanded1.png', width = 400, height = 2000, units = "px", pointsize = 12, res = 250)
+tiff(filename= 'expanded1.tiff', width = 400, height = 2000, units = "px", pointsize = 12, res = 250)
 kpOutput
 dev.off()
 

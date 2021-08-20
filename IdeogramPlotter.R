@@ -7,7 +7,9 @@ library(karyoploteR)
 library(regioneR)
 library(zoo)
 library(biovizBase)
+library(ggplot2)
 library(ggplotify)
+library(scatterpie)
 
 ###### 1.1 - Functions ########################################################################
 cytogeneticTableCheck <- function(dataframe) {
@@ -184,6 +186,37 @@ for(currentChr in unique(seqnames(grToPlot))) {
 }
 
 
+###### 4.2 - Plot pie charts ###
+colorList <- c("#006837" , "#1A9850" , "#A50026" , "#D73027" , "#4575B4" , "#313695" , "#b8b8b8" )  # Final choice
+
+pieData <- data.frame(abnormal = 103, normal = 430, total = 533, percent = 19.3)
+pieData <- data.frame(Group = c('Abnormal minux sc', 'Abnormal in sc', 'Normal'), value = c(92, 11, 430))
+
+piechart <- ggplot2
+
+# Basic piechart
+ggplot(pieData, aes(x="", y=value, fill=Group)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)
+
+sizeData <- data.frame(x = c(5, 30, 100, 150), size = c(1, 533, 1874, 20))
+
+ggplot(sizeData, aes(x = x, y = 20, size = size)) + 
+  geom_point() + scale_size_area() + scale_size(range = c(0,150)) + theme(legend.position = 'none')
+
+sizeData2 <- data.frame(x = c(0, 3000), y = c(20, 20), A = c(15,53), B = c(80,42), C = c(427, 1782), r = c(522,1877))
+sizeColor <- c('grey40', 'grey60', 'grey90')
+sizeColor <- c('#54278f', '#756bb1', '#f2f0f7')
+sizeColor <- c('#54278f', '#9e9ac8', '#f2f0f7')
+
+
+ggplot(data = sizeData) + 
+  geom_scatterpie(data = sizeData2, aes(x=x, y=y, r=sqrt(r/pi)*70), cols=LETTERS[1:3], size = 1.4) + 
+  coord_equal() + scale_fill_manual(values = sizeColor, labels = c('Lines with abnormalities (somatic)', 'Lines with abnormalities (on X/Y)', 'Normal Lines')) +
+  theme(panel.background = element_rect(fill = 'white'), axis.text = element_blank(),
+        axis.title = element_blank(), axis.ticks = element_blank(),
+        legend.key.size = unit(6,'mm'), legend.title = element_blank(), legend.text = element_text(size = 23), legend.position = 'None')
+
 ############################################################################################
 ### Write to folder
 setwd('C:/Users/grossar/Box/Sareen Lab Shared/Data/Andrew/E427 - Ideogram updates/Output images/')
@@ -195,6 +228,20 @@ tiff(filename= 'expanded1.tiff', width = 400, height = 2000, units = "px", point
 kpOutput
 dev.off()
 
+
+
+p <- ggplot() + geom_scatterpie(aes(x=long, y=lat, group=region, r=radius), data=d,
+                                cols=LETTERS[1:4], color=NA) + coord_equal()
+
+
+
+
+
+
+########################################################## ##########################################################
+########################################################## ##########################################################
+########################################################## ##########################################################
+##### Scratchwork
 
 ############################################################################################
 ### Write to folder
@@ -235,17 +282,6 @@ p2 <- as.ggplot(expression(kp <- plotKaryotype(genome="hg38", main="Human (hg38)
 p3 <- as.ggplot(expression(plotKaryotype(genome = "mm10", main="Mouse", plot.params = pp)))
 p4 <- as.ggplot(expression(plotKaryotype(genome = "dm6", main="Fruit fly")))
 save_plot("Multipanel_cowplot.png", plot_grid(p1, p2, p3, p4, ncol=2, labels=LETTERS[1:9]), base_height=10)
-
-
-
-
-
-
-
-
-
-
-##### Scratchwork
 
 grid.arrange(plotList[[1]], plotList[[2]], plotList[[3]],  nrow = 1)
 grid.arrange(latestPlot, nrow = 1)

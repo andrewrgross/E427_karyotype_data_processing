@@ -98,18 +98,18 @@ plotD <- melt(t(fig3d[5:6]))
    scale_y_continuous(breaks = seq(0,50,5), limits = c(0,45.1), expand = c(0,0)) +
   labs(x = 'Donor Age', 
        y = '% Abnormal') +
-  theme(plot.title = element_text(color="black", face="bold", hjust = 0.5, size=22, margin=margin(10,0,20,0)),
-        axis.title.x = element_text(face="bold", size=14,margin =margin(20,0,10,0)),
-        axis.title.y = element_text(face="bold", size=14,margin =margin(0,20,0,10)),
-        panel.background = element_rect(fill = 'white', color = 'white', size = 3),
-        panel.grid = element_blank(),
-        axis.line = element_line(size = 1.5),
-        axis.ticks = element_line(size = 1.5),
-        axis.text = element_text(face="bold", size = 14),
-        legend.position = 'none') )
+   theme(axis.title.x = element_text(face="italic", size=14, margin =margin(10,0,0,0)),
+         axis.title.y = element_text(face="italic", size=14, margin =margin(0,10,0,0)),
+         axis.text.x = element_text(size = 12),
+         axis.text.y = element_text(size = 12),
+         panel.background = element_rect(fill = 'white', color = 'white', size = 1),
+         panel.grid = element_blank(),
+         axis.line = element_line(size = 1.5),
+         axis.ticks = element_line(size = 2),
+         legend.position = 'none') ) #+ coord_equal(ratio = 0.08)
 
 sigData <- data.frame(x=c(0.875, 1.875, 2.875, 3.875, 4.875), xend=c(1.125, 2.125, 3.125, 4.125, 5.125),
-                      y=c(15, 17, 19, 30, 43), annotation=c('***', '**', '****', ' **** ', ' ** '))
+                      y=c(16, 18, 19, 18, 42), annotation=c('***', '**', '****', ' **** ', ' ** '))
 
 f3aPlot <- f3aPlot + geom_signif(stat="identity", 
                       data = sigData,
@@ -124,15 +124,16 @@ f3aPlot <- f3aPlot + geom_signif(stat="identity",
     scale_y_continuous(breaks = seq(0,50,5), limits = c(0,30.1), expand = c(0,0)) +
     labs(x = 'Karyotype # times', 
          y = '% Abnormal') +
-    theme(plot.title = element_text(color="black", face="bold", hjust = 0.5, size=22, margin=margin(10,0,20,0)),
-          axis.title.x = element_text(face="bold", size=18,margin =margin(20,0,10,0)),
-          axis.title.y = element_text(face="bold", size=18,margin =margin(0,20,0,10)),
-          panel.background = element_rect(fill = 'white', color = 'white', size = 3),
+    scale_x_discrete(labels = c("1st","Repeat (2nd - 4th)")) +
+    theme(axis.title.x = element_text(face="italic", size=14, margin =margin(10,0,0,0)),
+          axis.title.y = element_text(face="italic", size=14, margin =margin(0,10,0,0)),
+          axis.text.x = element_text(size = 12),
+          axis.text.y = element_text(size = 12),
+          panel.background = element_rect(fill = 'white', color = 'white', size = 1),
           panel.grid = element_blank(),
-          axis.line = element_line(size = 2),
+          axis.line = element_line(size = 1.5),
           axis.ticks = element_line(size = 2),
-          plot.margin = unit(c(1,1,1,1), "cm"), axis.text = element_text(size = 16),
-          legend.position = 'none') )
+          legend.position = 'none') ) #+   coord_equal(ratio = 0.08)
 
 sigData <- data.frame(x=c(0.875, 1.875), xend=c(1.125, 2.125),
                       y=c(22, 20), annotation=c('****', ' **** '))
@@ -150,15 +151,15 @@ f3bPlot <- f3bPlot + geom_signif(stat="identity",
     scale_y_continuous(breaks = seq(0,50,5), limits = c(0,30.1), expand = c(0,0)) +
     labs(x = 'iPSC passage number (range)', 
          y = '% Abnormal') +
-    theme(plot.title = element_text(color="black", face="bold", hjust = 0.5, size=22, margin=margin(10,0,20,0)),
-          axis.title.x = element_text(face="bold", size=18,margin =margin(20,0,10,0)),
-          axis.title.y = element_text(face="bold", size=18,margin =margin(0,20,0,10)),
-          panel.background = element_rect(fill = 'white', color = 'white', size = 3),
+    theme(axis.title.x = element_text(face="italic", size=14, margin =margin(10,0,0,0)),
+          axis.title.y = element_text(face="italic", size=14, margin =margin(0,10,0,0)),
+          axis.text.x = element_text(size = 12),
+          axis.text.y = element_text(size = 12),
+          panel.background = element_rect(fill = 'white', color = 'white', size = 1),
           panel.grid = element_blank(),
-          axis.line = element_line(size = 2),
+          axis.line = element_line(size = 1.5),
           axis.ticks = element_line(size = 2),
-          plot.margin = unit(c(1,1,1,1), "cm"), axis.text = element_text(size = 16),
-          legend.position = 'none') )
+          legend.position = 'none') ) #+   coord_equal(ratio = 0.08)
 
 sigData <- data.frame(x=c(0.875, 1.875), xend=c(1.125, 2.125),
                       y=c(19, 27), annotation=c('****', ' *** '))
@@ -173,21 +174,21 @@ f3cPlot <- f3cPlot + geom_signif(stat="identity",
 (f3dPlot <- ggplot(data = plotD, aes(x = Var2, y = value)) + 
     geom_bar(aes(fill = Var1), stat = 'identity', position=position_dodge()) + 
     scale_fill_manual(values = c('black', 'grey50')) +
-    scale_y_continuous(breaks = seq(0,60,5), limits = c(0,60.1), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0,60,5), limits = c(0,40.1), expand = c(0,0)) +
     labs(x = 'iPSC passage number (range)', 
          y = '% Abnormal') +
-    theme(plot.title = element_text(color="black", face="bold", hjust = 0.5, size=22, margin=margin(10,0,20,0)),
-          axis.title.x = element_text(face="bold", size=18,margin =margin(20,0,10,0)),
-          axis.title.y = element_text(face="bold", size=18,margin =margin(0,20,0,10)),
-          panel.background = element_rect(fill = 'white', color = 'white', size = 3),
+    theme(axis.title.x = element_text(face="italic", size=14, margin =margin(10,0,0,0)),
+          axis.title.y = element_text(face="italic", size=14, margin =margin(0,10,0,0)),
+          axis.text.x = element_text(size = 12),
+          axis.text.y = element_text(size = 12),
+          panel.background = element_rect(fill = 'white', color = 'white', size = 1),
           panel.grid = element_blank(),
-          axis.line = element_line(size = 2),
+          axis.line = element_line(size = 1.5),
           axis.ticks = element_line(size = 2),
-          plot.margin = unit(c(1,1,1,1), "cm"), axis.text = element_text(size = 16),
-          legend.position = 'none') )
+          legend.position = 'none') ) #+   coord_equal(ratio = 0.03)
 
 sigData <- data.frame(x=c(0.875, 1.875), xend=c(1.125, 2.125),
-                      y=c(55, 14), annotation=c('****', ' *** '))
+                      y=c(36, 14), annotation=c('****', ' *** '))
 
 f3dPlot <- f3dPlot + geom_signif(stat="identity", 
                                  data = sigData,
@@ -197,24 +198,48 @@ f3dPlot <- f3dPlot + geom_signif(stat="identity",
 
 ############################################################################################
 ### Write to folder
-
+setwd("C:/Users/grossar/Box/Sareen Lab Shared/Data/Andrew/E427 - Ideogram updates/Fig3 files")
 ### Save plot
-tiff(filename= paste0('Fig3A.tiff'), width = 520, height = 420, units = "px", pointsize = 20, res = 100)
+tiff(filename= paste0('Fig3A.tiff'), width = 420, height = 350, units = "px", pointsize = 20, res = 100)
 f3aPlot
 dev.off()
 
-tiff(filename= paste0('Fig3B.tiff'), width = 800, height = 800, units = "px", pointsize = 20, res = 100)
+tiff(filename= paste0('Fig3B.tiff'), width = 290, height = 350, units = "px", pointsize = 20, res = 100)
 f3bPlot
 dev.off()
 
-tiff(filename= paste0('Fig3C.tiff'), width = 800, height = 800, units = "px", pointsize = 20, res = 100)
+tiff(filename= paste0('Fig3C.tiff'), width = 320, height = 350, units = "px", pointsize = 20, res = 100)
 f3cPlot
 dev.off()
 
-tiff(filename= paste0('Fig3D.tiff'), width = 800, height = 800, units = "px", pointsize = 20, res = 100)
+tiff(filename= paste0('Fig3D.tiff'), width = 320, height = 350, units = "px", pointsize = 20, res = 100)
 f3dPlot
 dev.off()
 
 
+svg(filename= paste0('Fig3A.svg'), width = 420, height = 350, pointsize = 20)
+f3aPlot
+dev.off()
 
 
+### Save plot
+eps(filename= paste0('Fig3A.eps'), width = 420, height = 350, units = "px", pointsize = 20, res = 100)
+f3aPlot
+dev.off()
+
+tiff(filename= paste0('Fig3B.tiff'), width = 290, height = 350, units = "px", pointsize = 20, res = 100)
+f3bPlot
+dev.off()
+
+tiff(filename= paste0('Fig3C.tiff'), width = 320, height = 350, units = "px", pointsize = 20, res = 100)
+f3cPlot
+dev.off()
+
+tiff(filename= paste0('Fig3D.tiff'), width = 320, height = 350, units = "px", pointsize = 20, res = 100)
+f3dPlot
+dev.off()
+
+
+svg(filename= paste0('Fig3A.svg'), width = 420, height = 350, pointsize = 20)
+f3aPlot
+dev.off()

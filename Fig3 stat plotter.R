@@ -100,11 +100,11 @@ plotD <- melt(t(fig3d[5:6]))
        y = '% Abnormal') +
    theme(axis.title.x = element_text(face="italic", size=14, margin =margin(10,0,0,0)),
          axis.title.y = element_text(face="italic", size=14, margin =margin(0,10,0,0)),
-         axis.text.x = element_text(size = 12),
-         axis.text.y = element_text(size = 12),
+         axis.text.x = element_text(size = 14),
+         axis.text.y = element_text(size = 14),
          panel.background = element_rect(fill = 'white', color = 'white', size = 1),
          panel.grid = element_blank(),
-         axis.line = element_line(size = 1.5),
+         axis.line = element_line(size = 1),
          axis.ticks = element_line(size = 2),
          legend.position = 'none') ) #+ coord_equal(ratio = 0.08)
 
@@ -127,11 +127,11 @@ f3aPlot <- f3aPlot + geom_signif(stat="identity",
     scale_x_discrete(labels = c("1st","Repeat (2nd - 4th)")) +
     theme(axis.title.x = element_text(face="italic", size=14, margin =margin(10,0,0,0)),
           axis.title.y = element_text(face="italic", size=14, margin =margin(0,10,0,0)),
-          axis.text.x = element_text(size = 12),
-          axis.text.y = element_text(size = 12),
+          axis.text.x = element_text(size = 14),
+          axis.text.y = element_text(size = 14),
           panel.background = element_rect(fill = 'white', color = 'white', size = 1),
           panel.grid = element_blank(),
-          axis.line = element_line(size = 1.5),
+          axis.line = element_line(size = 1),
           axis.ticks = element_line(size = 2),
           legend.position = 'none') ) #+   coord_equal(ratio = 0.08)
 
@@ -153,11 +153,11 @@ f3bPlot <- f3bPlot + geom_signif(stat="identity",
          y = '% Abnormal') +
     theme(axis.title.x = element_text(face="italic", size=14, margin =margin(10,0,0,0)),
           axis.title.y = element_text(face="italic", size=14, margin =margin(0,10,0,0)),
-          axis.text.x = element_text(size = 12),
-          axis.text.y = element_text(size = 12),
+          axis.text.x = element_text(size = 14),
+          axis.text.y = element_text(size = 14),
           panel.background = element_rect(fill = 'white', color = 'white', size = 1),
           panel.grid = element_blank(),
-          axis.line = element_line(size = 1.5),
+          axis.line = element_line(size = 1),
           axis.ticks = element_line(size = 2),
           legend.position = 'none') ) #+   coord_equal(ratio = 0.08)
 
@@ -179,11 +179,11 @@ f3cPlot <- f3cPlot + geom_signif(stat="identity",
          y = '% Abnormal') +
     theme(axis.title.x = element_text(face="italic", size=14, margin =margin(10,0,0,0)),
           axis.title.y = element_text(face="italic", size=14, margin =margin(0,10,0,0)),
-          axis.text.x = element_text(size = 12),
-          axis.text.y = element_text(size = 12),
+          axis.text.x = element_text(size = 14),
+          axis.text.y = element_text(size = 14),
           panel.background = element_rect(fill = 'white', color = 'white', size = 1),
           panel.grid = element_blank(),
-          axis.line = element_line(size = 1.5),
+          axis.line = element_line(size = 1),
           axis.ticks = element_line(size = 2),
           legend.position = 'none') ) #+   coord_equal(ratio = 0.03)
 

@@ -50,6 +50,20 @@ def convertDateFormat(dataframe, columnName, returnErrors = False):
         return(newKaryoDateCol)
     else:
         return(rowError)
+    
+def grep(pattern, aList):
+    aList = list(aList)
+    start = 0
+    output = []
+    while True:
+        try:
+            pos = aList.index(pattern, start)
+            output.append(pos)
+            start = pos+1
+        except:
+            return(output)
+            break
+    
 ###### 2.2 - Bins ages
 def binAges(dataframe):  ### Returns a new column as a new dataframe
     ageBin = pd.DataFrame(np.arange(len(dataframe))*0)
@@ -279,17 +293,16 @@ for rowNum in range(0,len(metadata)):
 
 karyoFull = newDF
 
-###### 7.2.1 - Isolate columns of interest
-#colNames = metadata.columns.tolist()
-#colKeep = colNames[1:3] + [colNames[4]] + colNames[7:10] + colNames[11:14] + colNames[15:18] + colNames[19:22] + colNames[23:26]
-#metadata = metadata[colKeep]
-
+###### 7.2.1 - Remove Source column
+colToKeep = karyoFull.columns.tolist()
+colToKeep
+del colToKeep[6]
+karyoFull = karyoFull[colToKeep]
 
 ###### 7.3 - Convert Date of Karyotype to standard date format
 karyoFull['Date-Karyo'] = (karyoFull['Date-Karyo']).apply(str)
 newDates = convertDateFormat(karyoFull, 'Date-Karyo')
 karyoFull['Date-Karyo'] = newDates
-
 
 ###### 7.4 - Add a column marking expanded or non
 print(karyoFull['Type'].unique())
@@ -305,9 +318,12 @@ for rowNum in range(0,len(karyoFull)):
     
     elif 'Epithelial' in rowCurrent['Type'] :
         newColumn.append('Expanded')
+    
+    elif 'Adipose' in rowCurrent['Type'] :
+        newColumn.append('Expanded')
 
     elif 'PBMC' in rowCurrent['Type'] :
-        newColumn.append('Unex')
+        newColumn.append('Unexpanded')
         
     else:
         print('Error: unrecognized cell type in line ' + str(counter) + ': ' + rowCurrent['Parent cell type'])
@@ -317,14 +333,132 @@ for rowNum in range(0,len(karyoFull)):
 
 karyoFull['Expansion'] = newColumn
 
-###### Export
+
+###### 7.5 - Add a column with the parent cell line name
+parentNames = []
+for rowNum in range(0,len(karyoFull)):
+    parentName = karyoFull['Cell Line'].iloc[rowNum].split('-')[0]
+    parentNames.append(parentName)
+
+karyoFull['Parent Line'] = parentNames
+
+###### 7.6 - Fill in donor number
+
+uniqueParentNames = list(dict.fromkeys(parentNames))
+
+donorNum = []
+for rowNum in range(0,len(karyoFull)):
+    parentName = parentNames[rowNum]
+    newDonorNum = uniqueParentNames.index(parentName) +1
+    donorNum.append(newDonorNum)
+
+karyoFull['Donor #'] = donorNum
+
+
+###### 7.8 - Add a row index
+rowIndex = list(range(1,len(karyoFull)+1))
+karyoFull['RowNum'] = rowIndex
+
+###### 7.7 - Reorder Columns
+newOrder = ['RowNum','Donor #',
+ 'Parent Line', 
+ 'Cell Line',
+ 'Type',
+ 'Expansion',
+ 'Age',
+ 'Sex',
+ 'Passage-reprogramming',
+ 'Passage-Karyo',
+ 'Date-Karyo',
+ 'KaryoNum',
+ 'Result',
+ 'Normality']
+
+karyoFull = karyoFull[newOrder]
+
+#colNames = metadata.columns.tolist()
+#colKeep = colNames[1:3] + [colNames[4]] + colNames[7:10] + colNames[11:14] + colNames[15:18] + colNames[19:22] + colNames[23:26]
+#metadata = metadata[colKeep]
+
+###### 8.0 - Export
 
 os.chdir('C:/Users/grossar/Box/Sareen Lab Shared/Data/Andrew/E427 - Ideogram updates')
 karyoFull.to_excel('karyotypes-FULL.xls', index=False)
 
+###### 9.0 Reimport if necessary
+karyoImport = pd.read_excel('karyotypes-FULL.xls')
 
 
+###### 10.0 - Extract key stats
+### 10.1 - subset data by source cell type
 
+epi = karyoImport[karyoImport['Type']=='Epithelial']
+adi = karyoImport[karyoImport['Type']=='Adipose']
+fib = karyoImport[karyoImport['Type']=='Fibroblast']
+mfib = karyoImport[karyoImport['Type']=='Mod-Fibroblast']
+lcl = karyoImport[karyoImport['Type']=='LCL']
+pbmc =karyoImport[karyoImport['Type']=='PBMC']
+mpbmc = karyoImport[karyoImport['Type']=='Mod-PBMC']
+
+### 10.2 - count parent lines
+
+len(list(dict.fromkeys(epi['Parent Line'])))
+len(list(dict.fromkeys(adi['Parent Line'])))
+len(list(dict.fromkeys(fib['Parent Line'])))
+len(list(dict.fromkeys(mfib['Parent Line'])))
+len(list(dict.fromkeys(lcl['Parent Line'])))
+len(list(dict.fromkeys(pbmc['Parent Line'])))
+len(list(dict.fromkeys(mpbmc['Parent Line'])))
+
+### 10.3 - count clone lines
+
+len(list(dict.fromkeys(epi['Cell Line'])))
+len(list(dict.fromkeys(adi['Cell Line'])))
+len(list(dict.fromkeys(fib['Cell Line'])))
+len(list(dict.fromkeys(mfib['Cell Line'])))
+len(list(dict.fromkeys(lcl['Cell Line'])))
+len(list(dict.fromkeys(pbmc['Cell Line'])))
+len(list(dict.fromkeys(mpbmc['Cell Line'])))
+
+### 10.4 - count karyotypes
+
+len(epi)
+len(adi)
+len(fib)
+len(mfib)
+len(lcl)
+len(pbmc)
+len(mpbmc)
+
+### 10.1 - count expanded line stats
+
+karyoEx = karyoImport[karyoImport['Expansion'] == 'Expanded']
+len(karyoEx)
+np.count_nonzero(karyoEx['Normality']=='Abnormal')
+
+karyoUnex = karyoImport[karyoImport['Expansion'] == 'Unexpanded']
+len(karyoUnex)
+np.count_nonzero(karyoUnex['Normality']=='Abnormal')
+
+
+len(list(dict.fromkeys(karyoUnex['Cell Line'])))
+
+
+cellType = 'Fibroblast'
+cellType = 'PBMC'
+cellType = 'Epithelial'
+(list(np.where(karyoImport['Type'] == cellType))[0].tolist())
+len(list(np.where(newDF['Type'] == cellType))[0].tolist())
+
+os.chdir('C:/Users/grossar/Box/Sareen Lab Shared/Data/Andrew/E427 - Ideogram updates')
+karyoExAb = karyoEx[karyoEx['Normality'] == 'Abnormal']
+karyoExAb.to_excel('karyotypes-ExAb.xls', index=False)
+
+karyoUnexAb = karyoUnex[karyoUnex['Normality'] == 'Abnormal']
+karyoUnexAb.to_excel('karyotypes-UnexAb.xls', index=False)
+
+
+'''
 ##############################################################################
 ### 8. Format additional metadata
 ###### 8.1 - Add a parent line name
@@ -508,3 +642,4 @@ len(dataUnex)
 
 os.chdir('C:/Users/grossar/Box/Sareen Lab Shared/Data/Andrew/E427 - Ideogram updates')
 karyoFull.to_excel('Karyotypes-FULL.xls')
+'''

@@ -10,6 +10,8 @@ library(biovizBase)
 library(ggplot2)
 library(ggplotify)
 library(scatterpie)
+library(RIdeogram)
+library(IdeoViz)
 
 ###### 1.1 - Functions ########################################################################
 cytogeneticTableCheck <- function(dataframe) {
@@ -113,7 +115,7 @@ setwd('C:/Users/grossar/Box/Sareen Lab Shared/Data/Andrew/E427 - Ideogram update
 expandedRaw <- read.table('Expanded_abnorms.txt', sep = '\t')
 unexpandedRaw <- read.table('Unexpanded_abnorms.txt', sep = '\t')
 
-#hg19 <- getIdeogram("hg19", cytobands = TRUE)
+hg19 <- getIdeo("hg19")
 
 ###############################################################################################
 ### 3 - Format Data ###########################################################################
@@ -216,6 +218,41 @@ ggplot(data = sizeData) +
   theme(panel.background = element_rect(fill = 'white'), axis.text = element_blank(),
         axis.title = element_blank(), axis.ticks = element_blank(),
         legend.key.size = unit(6,'mm'), legend.title = element_blank(), legend.text = element_text(size = 23), legend.position = 'None')
+
+
+###### 4.3 - Plot good chromosome images ###
+data(human_karyotype, package="RIdeogram")
+data(gene_density, package="RIdeogram")
+data(Random_RNAs_500, package="RIdeogram")
+gene_density <- GFFex(input = "gencode.v32.annotation.gff3.gz", karyotype = "human_karyotype.txt", feature = "gene", window = 1000000)
+
+human_karyotype <- human_karyotype[,1:3]
+ideogram(karyotype = human_karyotype, overlaid = NULL, label = NULL, label_type = NULL)
+convertSVG("chromosome.svg", device = "png")
+
+
+ideogram(karyotype, overlaid = NULL, label = NULL, label_type = NULL, synteny = NULL, colorset1, colorset2, width, Lx, Ly, output = "chromosome.svg")
+convertSVG(svg, device, width, height, dpi)
+convertSVG("chromosome.svg", device = "tiff", dpi = 600)
+
+require(IdeoViz)
+data(binned_multiSeries)
+hg19 <- getIdeo("hg19")
+
+data(binned_singleSeries)
+chr = c('chr1', 'chr2',  'chr3',  'chr4',  'chr5',  'chr6',  'chr7',  'chr8',  'chr9')
+chr = c('chr1', 'chr10', 'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17')
+chr = c('chr1', 'chr17', 'chr18', 'chr19', 'chr20', 'chr21', 'chr22', 'chrX',  'chrY')
+df <- data.frame(chr=chr, start=1, end=2, values = 0)
+gro <- GRanges(df)
+
+plotOnIdeo(chrom=seqlevels(gro), ideo=hg19, values_GR = gro, value_cols= colnames(mcols(gro)), vertical=T, addScale = F)
+
+data(hg18_ideo) # cytoBandIdeo table downloaded previously and stored as a data.frame.
+plotOnIdeo(chrom=chr, ideo=hg19, values_GR=binned_singleSeries, value_cols=colnames(mcols(binned_singleSeries)), vertical=T,  
+             val_range=c(-10,10))
+
+plotOnIdeo(chrom=chr, ideo=hg19, values_GR=binned_singleSeries, value_cols=colnames(mcols(binned_singleSeries)), vertical=T)
 
 ############################################################################################
 ### Write to folder

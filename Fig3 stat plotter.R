@@ -43,7 +43,29 @@ fig3a$zScore <- zScores
 fig3a$pValue <- 2*(1-pnorm(fig3a$zScore))
 plotA <- melt(t(fig3a[5:6]))
 
-####### 3.1 - Fig3 B: Karyotype number
+####### 3.1.1 - Calc p-vals between age groups
+expandedAbnormYoung = sum(fig3a$Expanded.abnormal[1:4])
+expandedAbnormOld = fig3a$Expanded.abnormal[5]
+expandedTotalYoung = sum(fig3a$expanded.total[1:4])
+expandedTotalOld = fig3a$expanded.total[5]
+expandedAgeZ = zScoreCalculator(expandedAbnormYoung, expandedAbnormOld, expandedTotalYoung, expandedTotalOld)
+2*(1-pnorm(abs(expandedAgeZ)))
+
+unexpandedAbnormYoung = sum(fig3a$unexpanded.abnormal[1:4])
+unexpandedAbnormOld = fig3a$unexpanded.abnormal[5]
+unexpandedTotalYoung = sum(fig3a$unexpanded.total[1:4])
+unexpandedTotalOld = fig3a$unexpanded.total[5]
+unexpandedAgeZ = zScoreCalculator(unexpandedAbnormYoung, unexpandedAbnormOld, unexpandedTotalYoung, unexpandedTotalOld)
+2*(1-pnorm(unexpandedAgeZ))
+
+allAbnormYoung = expandedAbnormYoung + unexpandedAbnormYoung
+allAbnormOld = expandedAbnormOld + unexpandedAbnormOld
+allTotalYoung = expandedTotalYoung + unexpandedTotalYoung
+allTotalOld = expandedTotalOld + unexpandedTotalOld
+allAgeZ = zScoreCalculator(allAbnormYoung, allAbnormOld, allTotalYoung, allTotalOld)
+2*(1-pnorm(abs(allAgeZ)))
+
+####### 3.2 - Fig3 B: Karyotype number
 fig3b$expandedPercent <- fig3b$Expanded.abnormal/fig3b$expanded.total*100
 fig3b$unexpandedPercent <- fig3b$unexpanded.abnormal/fig3b$unexpanded.total*100
 fig3b$zScore <- zScoreCalculator(fig3b$Expanded.abnormal, fig3b$unexpanded.abnormal, fig3b$expanded.total, fig3b$unexpanded.abnormal)
